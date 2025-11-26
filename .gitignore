@@ -1,8 +1,8 @@
 build/
-**/*.o
-.vscode/
-.cache/
-.DS_Store.idea/
-build/
 cmake-build-debug/
 cmake-build-release/
+.vscode/
+.cache/
+.DS_Store
+.idea/
+*.o
