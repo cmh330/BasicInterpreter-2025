@@ -101,14 +101,24 @@ Statement* Parser::parseLet(TokenStream& tokens,
   auto expr = parseExpression(tokens);
 
   // TODO: create a corresponding stmt and return it.
-  return new LetStatement(originLine, varName, expr);
+  try {
+    return new LetStatement(originLine, varName, expr);
+  } catch (...) {
+    delete expr;
+    throw;
+  }
 }
 
 Statement* Parser::parsePrint(TokenStream& tokens,
                               const std::string& originLine) const {
   auto expr = parseExpression(tokens);
   // TODO: create a corresponding stmt and return it.
-  return new PrintStatement(originLine, expr);
+  try {
+    return new PrintStatement(originLine, expr);
+  } catch (...) {
+    delete expr;
+    throw;
+  }
 }
 
 Statement* Parser::parseInput(TokenStream& tokens,
@@ -190,7 +200,13 @@ Statement* Parser::parseIf(TokenStream& tokens,
   int targetLine = parseLiteral(lineToken);
 
   // TODO: create a corresponding stmt and return it.
-  return new IfStatement(originLine, leftExpr, op, rightExpr, targetLine);
+  try {
+    return new IfStatement(originLine, leftExpr, op, rightExpr, targetLine);
+  } catch (...) {
+    delete leftExpr;
+    delete rightExpr;
+    throw;
+  }
 }
 
 Statement* Parser::parseRem(TokenStream& tokens,
