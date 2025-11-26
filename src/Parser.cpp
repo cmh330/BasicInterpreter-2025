@@ -190,10 +190,7 @@ Statement* Parser::parseIf(TokenStream& tokens,
   int targetLine = parseLiteral(lineToken);
 
   // TODO: create a corresponding stmt and return it.
-  Statement* statement = new IfStatement(originLine, leftExpr, op, rightExpr, targetLine);
-  delete leftExpr;
-  delete rightExpr;
-  return statement;
+  return new IfStatement(originLine, leftExpr, op, rightExpr, targetLine);
 }
 
 Statement* Parser::parseRem(TokenStream& tokens,
