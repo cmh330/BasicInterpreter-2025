@@ -20,4 +20,5 @@ class Recorder {
 
  private:
   // TODO.
+  std::map<int, Statement*> lines_;
 };
