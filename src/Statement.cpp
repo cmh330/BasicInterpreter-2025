@@ -55,10 +55,34 @@ void InputStatement::execute(VarState& state, Program& program) const {
   std::string input;
   std::getline(std::cin, input);
 
-  size_t pos;
-  int value = std::stoi(input, &pos);
-  if (pos != input.size()) {
-    std::cout << "INVALID NUMBER\n";
-  } else state.setValue(var_, value);
+  if (input.empty()) {
+    throw BasicError("INVALID NUMBER");
+  }
 
+  size_t start = 0;
+  bool negative = false;
+  if (input[0] == '-') {
+    if (input.length() == 1) {  // only a '-'
+      throw BasicError("INVALID NUMBER");
+    }
+    start = 1;
+    negative = true;
+  }
+
+  long int value = 0;
+  for (size_t i = start; i < input.length(); i++) {
+    if (input[i] < '0' || input[i] > '9') {
+      throw BasicError("INVALID NUMBER");
+    }
+    int digit = input[i] - '0';
+    if (value > 214748364) {
+      // 溢出了
+      throw BasicError("INVALID NUMBER");
+    }
+    value = value * 10 + digit;
+  }
+  if (negative) {
+    value = -value;
+  }
+  state.setValue(var_, value);
 }
