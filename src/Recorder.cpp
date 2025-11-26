@@ -45,7 +45,7 @@ void Recorder::clear() noexcept {
   lines_.clear();
 }
 
-void Recorder::printLines() const noexcept {
+void Recorder::printLines() const {
   for (auto it = lines_.begin(); it != lines_.end(); ++it) {
     int line = it->first;
     const Statement* stmt = it->second;
