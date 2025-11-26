@@ -63,6 +63,7 @@ int main() {
         Statement* stmt = parsed.fetchStatement();
         if (stmt != nullptr) {
           program.execute(stmt);
+          delete stmt;
         }
       }
     } catch (const BasicError& e) {
