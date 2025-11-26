@@ -20,6 +20,51 @@ int main() {
     }
     try {
       // TODO: The main function.
+      TokenStream tokens = lexer.tokenize(line);
+      const Token* firstToken = tokens.peek();
+      // RUN
+      if (firstToken && firstToken->type == TokenType::RUN) {
+        program.run();
+        continue;
+      }
+      // LIST
+      if (firstToken && firstToken->type == TokenType::LIST) {
+        program.list();
+        continue;
+      }
+      // CLEAR
+      if (firstToken && firstToken->type == TokenType::CLEAR) {
+        program.clear();
+        continue;
+      }
+      // QUIT
+      if (firstToken && firstToken->type == TokenType::QUIT) {
+        return 0;
+      }
+      // HELP
+      if (firstToken && firstToken->type == TokenType::HELP) {
+        continue;
+      }
+      ParsedLine parsed = parser.parseLine(tokens, line);
+      // 检查是否有行号
+      if (parsed.getLine().has_value()) {
+        // 有行号
+        int line = parsed.getLine().value();
+        Statement* stmt = parsed.fetchStatement();
+        if (stmt == nullptr) {
+          // 只有一个行号
+          program.removeStmt(line);
+        } else {
+          // 把这一行添加进去
+          program.addStmt(line, stmt);
+        }
+      } else {
+        // 没有行号
+        Statement* stmt = parsed.fetchStatement();
+        if (stmt != nullptr) {
+          program.execute(stmt);
+        }
+      }
     } catch (const BasicError& e) {
       std::cout << e.message() << "\n";
     }
