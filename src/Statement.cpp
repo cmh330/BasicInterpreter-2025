@@ -51,7 +51,7 @@ void EndStatement::execute(VarState& state, Program& program) const {
 // InputStatement
 InputStatement::InputStatement(std::string source, std::string var) : Statement(std::move(source)), var_(std::move(var)) {}
 void InputStatement::execute(VarState& state, Program& program) const {
-  std::cout << "?";
+  std::cout << " ? ";
   std::string input;
   std::getline(std::cin, input);
 
