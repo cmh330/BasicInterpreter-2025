@@ -84,5 +84,42 @@ void InputStatement::execute(VarState& state, Program& program) const {
   if (negative) {
     value = -value;
   }
-  state.setValue(var_, value);
+  state.setValue(var_, static_cast<int>(value));
+}
+
+
+// GotoStatement
+GotoStatement::GotoStatement(std::string source, int targetLine) : Statement(std::move(source)), targetLine_(targetLine) {}
+void GotoStatement::execute(VarState& state, Program& program) const {
+  program.changePC(targetLine_);
+}
+
+
+// IfStatement
+IfStatement::IfStatement(std::string source, Expression* left, char op,
+  Expression* right, int targetLine) : Statement(std::move(source)), left_(left), op_(op), right_(right), targetLine_(targetLine) {}
+IfStatement::~IfStatement() {
+  delete left_;
+  delete right_;
+}
+void IfStatement::execute(VarState& state, Program& program) const {
+  int l = left_->evaluate(state);
+  int r = right_->evaluate(state);
+  bool success = false;
+
+  switch (op_) {
+    case '=':
+      success = (l == r);
+      break;
+    case '>':
+      success = (l > r);
+      break;
+    case '<':
+      success = (l < r);
+      break;
+  }
+
+  if (success) {
+    program.changePC(targetLine_);
+  }
 }

@@ -77,4 +77,31 @@ public:
 
 private:
   std::string var_;
+};
+
+
+// GotoStatement
+class GotoStatement : public Statement {
+public:
+  GotoStatement(std::string source, int targetLine);
+  ~GotoStatement() override = default;
+  void execute(VarState& state, Program& program) const override;
+
+private:
+  int targetLine_;
+};
+
+
+// IfStatement
+class IfStatement: public Statement {
+public:
+  IfStatement(std::string source, Expression* left, char op, Expression* right, int targetLine);
+  ~IfStatement() override;
+  void execute(VarState& state, Program& program) const override;
+
+private:
+  Expression* left_;
+  char op_;
+  Expression* right_;
+  int targetLine_;
 }
