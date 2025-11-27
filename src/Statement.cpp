@@ -51,40 +51,54 @@ void EndStatement::execute(VarState& state, Program& program) const {
 // InputStatement
 InputStatement::InputStatement(std::string source, std::string var) : Statement(std::move(source)), var_(std::move(var)) {}
 void InputStatement::execute(VarState& state, Program& program) const {
-  std::cout << " ? ";
-  std::string input;
-  std::getline(std::cin, input);
+  while (true) {
+    std::cout << " ? ";
+    std::string input;
+    std::getline(std::cin, input);
 
-  if (input.empty()) {
-    throw BasicError("INVALID NUMBER");
-  }
+    if (input.empty()) {
+      std::cout << "INVALID NUMBER\n";
+      continue;
+    }
 
-  size_t start = 0;
-  bool negative = false;
-  if (input[0] == '-') {
-    if (input.length() == 1) {  // only a '-'
-      throw BasicError("INVALID NUMBER");
+    size_t start = 0;
+    bool negative = false;
+    if (input[0] == '-') {
+      if (input.length() == 1) {  // only a '-'
+        std::cout << "INVALID NUMBER\n";
+        continue;
+      }
+      start = 1;
+      negative = true;
     }
-    start = 1;
-    negative = true;
-  }
 
-  long int value = 0;
-  for (size_t i = start; i < input.length(); i++) {
-    if (input[i] < '0' || input[i] > '9') {
-      throw BasicError("INVALID NUMBER");
+    bool success = true;
+
+    long int value = 0;
+    for (size_t i = start; i < input.length(); i++) {
+      if (input[i] < '0' || input[i] > '9') {
+        std::cout << "INVALID NUMBER\n";
+        success = false;
+        break;
+      }
+      int digit = input[i] - '0';
+      if (value > 214748364) {
+        // 溢出了
+        std::cout << "INVALID NUMBER\n";
+        success = false;
+        break;
+      }
+      value = value * 10 + digit;
     }
-    int digit = input[i] - '0';
-    if (value > 214748364) {
-      // 溢出了
-      throw BasicError("INVALID NUMBER");
+    if (!success) {
+      continue;
     }
-    value = value * 10 + digit;
+    if (negative) {
+      value = -value;
+    }
+    state.setValue(var_, static_cast<int>(value));
+    break;
   }
-  if (negative) {
-    value = -value;
-  }
-  state.setValue(var_, static_cast<int>(value));
 }
 
 
