@@ -49,7 +49,7 @@ void Recorder::printLines() const {
   for (auto it = lines_.begin(); it != lines_.end(); ++it) {
     int line = it->first;
     const Statement* stmt = it->second;
-    std::cout << line << " " << stmt->text() << '\n';
+    std::cout << stmt->text() << '\n';
   }
 }
 
