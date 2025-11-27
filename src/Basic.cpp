@@ -56,14 +56,24 @@ int main() {
           program.removeStmt(line);
         } else {
           // 把这一行添加进去
-          program.addStmt(line, stmt);
+          try {
+            program.addStmt(line, stmt);
+          } catch (...) {
+            delete stmt;
+            throw;
+          }
         }
       } else {
         // 没有行号
         Statement* stmt = parsed.fetchStatement();
         if (stmt != nullptr) {
-          program.execute(stmt);
-          delete stmt;
+          try {
+            program.execute(stmt);
+            delete stmt;
+          } catch (...) {
+            delete stmt;
+            throw;
+          }
         }
       }
     } catch (const BasicError& e) {
