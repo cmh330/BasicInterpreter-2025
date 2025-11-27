@@ -64,5 +64,5 @@ void Program::programEnd() {
 void Program::resetAfterRun() noexcept {
   programCounter_ = -1;
   programEnd_ = false;
-  vars_.clear();
+  // vars_.clear();
 }
